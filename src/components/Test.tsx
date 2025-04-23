@@ -8,6 +8,8 @@ export const Test = defineComponent<Props>(
   (props) => {
     const [count, setCount] = useState(0)
 
+    const [text, setText] = useState('')
+
     let controller = new AbortController()
 
     useEffect(() => {
@@ -36,6 +38,12 @@ export const Test = defineComponent<Props>(
 
       return (
         <div>
+          <input
+            type="text"
+            value={text.value}
+            onInput={(e) => setText(e.target.value)}
+          />
+          {text.value}
           <div>Test {props.userName}</div>
           <button onClick={() => setCount((c) => c + 1)}>click</button>
           <div>count: {count.value}</div>
