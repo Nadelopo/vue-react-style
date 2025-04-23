@@ -1,30 +1,23 @@
-import { onMounted, onUnmounted, watch, type Ref } from 'vue'
+import { onMounted, onUnmounted, onUpdated, watch, type Ref } from 'vue'
 
-export const useEffect = (cb: () => void | (() => void), deps: Ref<unknown>[]) => {
+export const useEffect = (cb: () => void | (() => void), deps?: Ref<unknown>[]) => {
   let cleanup: (() => void) | undefined
 
-  onMounted(() => {
+  const runEffect = () => {
+    cleanup?.()
     const result = cb()
     if (typeof result === 'function') {
       cleanup = result
     }
-  })
-
-  if (deps.length !== 0) {
-    watch(
-      deps,
-      () => {
-        cleanup?.()
-        const result = cb()
-        if (typeof result === 'function') {
-          cleanup = result
-        }
-      },
-      { deep: true },
-    )
   }
 
-  onUnmounted(() => {
-    cleanup?.()
-  })
+  onMounted(runEffect)
+
+  if (deps === undefined) {
+    onUpdated(runEffect)
+  } else if (deps?.length) {
+    watch(deps, runEffect, { deep: true })
+  }
+
+  onUnmounted(() => cleanup?.())
 }
