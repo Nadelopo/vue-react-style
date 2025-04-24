@@ -1,7 +1,7 @@
-import { defineComponent, provide, inject, type InjectionKey } from 'vue'
+import { defineComponent, provide, inject } from 'vue'
 
-export const createContext = <T>(defaultValue: T) => {
-  const key = Symbol() as InjectionKey<T>
+export const createContext = <T>(key: string | symbol, defaultValue: T) => {
+  console.log('hmr')
   const Provider = defineComponent<{ value: T }>(
     (props, { slots }) => {
       provide(key, props.value)
@@ -13,7 +13,6 @@ export const createContext = <T>(defaultValue: T) => {
   return { Provider, key, defaultValue }
 }
 
-export const useContext = <T>(context: { key: InjectionKey<T>; defaultValue: T }) => {
-  const injected = inject(context.key, context.defaultValue)!
-  return injected
+export const useContext = <T>(context: { key: string | symbol; defaultValue: T }) => {
+  return inject(context.key, context.defaultValue)
 }

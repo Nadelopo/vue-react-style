@@ -1,21 +1,32 @@
 import { defineComponent, type Ref } from 'vue'
-import { Test } from './components/Test'
-import { useState, type Dispatch, type SetStateAction } from './hooks/useState'
-import { createContext } from './hooks/useContext'
+import { useState, type Dispatch, type SetStateAction, createContext, useContext } from './hooks'
+import { Counter } from './components/Counter'
 
-export const TestContext = createContext<{
-  show: Ref<boolean>
-  setShow: Dispatch<SetStateAction<boolean>>
-} | null>(null)
+type CounterContextType = {
+  count: Ref<number>
+  setCount: Dispatch<SetStateAction<number>>
+  reset: () => void
+}
+
+export const CounterContext = createContext<CounterContextType | null>('counter', null)
+
+export const useCounterContext = () => {
+  const context = useContext(CounterContext)
+  if (!context) {
+    throw new Error('CounterContext is not provided')
+  }
+  return context
+}
 export const App = defineComponent(() => {
-  const [show, setShow] = useState(false)
+  const [count, setCount] = useState(0)
+
+  const reset = () => setCount(0)
 
   return () => (
     <div>
-      <TestContext.Provider value={{ show, setShow }}>
-        <button onClick={() => setShow((s) => !s)}>click</button>
-        {show.value && <Test userName="test" />}
-      </TestContext.Provider>
+      <CounterContext.Provider value={{ count, setCount, reset }}>
+        <Counter />
+      </CounterContext.Provider>
     </div>
   )
 })
