@@ -1,3 +1,5 @@
+import { TestContext } from '@/App'
+import { useContext } from '@/hooks/useContext'
 import { useEffect } from '@/hooks/useEffect'
 import { useMemo, useMemoEffective } from '@/hooks/useMemo'
 import { useRef } from '@/hooks/useRef'
@@ -8,6 +10,9 @@ type Props = { userName: string }
 
 export const Test = defineComponent<Props>(
   (props) => {
+    const { show, setShow } = useContext(TestContext)
+    console.log('test', show)
+
     const [count, setCount] = useState(1)
 
     const inputRef = useRef<HTMLInputElement>()
@@ -43,6 +48,7 @@ export const Test = defineComponent<Props>(
     return () => {
       return (
         <div>
+          <button onClick={() => setShow(() => !show.value)}>close</button>
           <input
             ref={inputRef}
             type="text"

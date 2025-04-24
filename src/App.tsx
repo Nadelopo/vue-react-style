@@ -1,13 +1,21 @@
-import { defineComponent } from 'vue'
+import { defineComponent, type Ref } from 'vue'
 import { Test } from './components/Test'
-import { useState } from './hooks/useState'
+import { useState, type Dispatch, type SetStateAction } from './hooks/useState'
+import { createContext } from './hooks/useContext'
 
+export const TestContext = createContext<{
+  show: Ref<boolean>
+  setShow: Dispatch<SetStateAction<boolean>>
+} | null>(null)
 export const App = defineComponent(() => {
   const [show, setShow] = useState(false)
+
   return () => (
     <div>
-      <button onClick={() => setShow((s) => !s)}>click</button>
-      {show.value && <Test userName="test" />}
+      <TestContext.Provider value={{ show, setShow }}>
+        <button onClick={() => setShow((s) => !s)}>click</button>
+        {show.value && <Test userName="test" />}
+      </TestContext.Provider>
     </div>
   )
 })
