@@ -22,8 +22,22 @@ export const App = defineComponent(() => {
 
   const reset = () => setCount(0)
 
+  const [text, setText] = useState<string | null>(null)
   return () => (
     <div>
+      <input
+        v-input={[[text, setText]]}
+        type="text"
+      />
+      <div style={{ textAlign: 'center' }}>
+        <div>{text.value}</div>
+        <button
+          onClick={() => setText('')}
+          style={{ marginBottom: '20px' }}
+        >
+          reset
+        </button>
+      </div>
       <CounterContext.Provider value={{ count, setCount, reset }}>
         <Counter />
       </CounterContext.Provider>

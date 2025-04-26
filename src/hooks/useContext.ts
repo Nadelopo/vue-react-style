@@ -1,7 +1,6 @@
 import { defineComponent, provide, inject } from 'vue'
 
 export const createContext = <T>(key: string | symbol, defaultValue: T) => {
-  console.log('hmr')
   const Provider = defineComponent<{ value: T }>(
     (props, { slots }) => {
       provide(key, props.value)
